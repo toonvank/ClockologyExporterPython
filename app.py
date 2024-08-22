@@ -37,26 +37,18 @@ def clockface():
             data = data.decode('utf-8')
 
         images = extract_images_from_base64(data)
+        image_strings = []
+        for img in images:
+            buffered = BytesIO()
+            img.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
+            image_strings.append(img_str)
 
-        # Save each image
-        for idx, img in enumerate(images):
-            img.save(f'image_{idx + 1}.png')
-
+        return jsonify({'images': image_strings})
 
     except InvalidPlistException as e:
         return jsonify({'error': 'Invalid plist file'}), 400
 
-    response_data = {
-        'xml': "xavier turd",
-        'details': {
-            'name': 'Elegant Analog',  # Example data, replace with actual details if needed
-            'author': 'John Doe',
-            'version': '1.2',
-            'updated': '2023-04-15'
-        }
-    }
-
-    return jsonify(response_data)
 
 
 def extract_images_from_base64(base64_data):

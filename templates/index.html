@@ -32,17 +32,21 @@
         </div>
     </div>
 
-    <div class="mt-8">
+
+    <div class="text-center mt-4" style="display: none" id="loading">
+        <img src="https://global.discourse-cdn.com/sitepoint/original/3X/e/3/e352b26bbfa8b233050087d6cb32667da3ff809c.gif"
+         style="display: block; margin-left: auto; margin-right: auto; width: 40%; margin-top: 10px">
+        <p class="text-lg text-gray-500">Loading...</p>
+    </div>
+
+    <div class="mt-8" style="display: none">
         <div class="bg-white shadow rounded-lg">
             <div class="p-4 border-b border-gray-200">
                 <h3 class="text-xl font-bold">Clock Face Preview</h3>
             </div>
             <div class="p-4">
                 <div class="grid gap-4">
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                        <img src="/placeholder.svg" alt="Clock Face Asset" width="200" height="200" class="object-cover rounded-md" style="aspect-ratio: 200/200; object-fit: cover;">
-                        <img src="/placeholder.svg" alt="Clock Face Asset" width="200" height="200" class="object-cover rounded-md" style="aspect-ratio: 200/200; object-fit: cover;">
-                        <img src="/placeholder.svg" alt="Clock Face Asset" width="200" height="200" class="object-cover rounded-md" style="aspect-ratio: 200/200; object-fit: cover;">
+                    <div id="imageContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     </div>
                     <div>
                         <h3 class="text-lg font-semibold">Clock Face Details</h3>
@@ -86,13 +90,40 @@
             return;
         }
 
+        document.querySelector('.mt-8').style.display = 'none';
+        document.getElementById('loading').style.display = 'block';
         fetch('/api/clockface', {
-            method: 'POST',
-            body: formData
-            })
-            .catch(error => {
-                console.error('Error:', error);
+        method: 'POST',
+        body: formData
+        })
+        .then(response => response.json())  // Parse the JSON response
+        .then(data => {
+            if (data.error) {
+                console.error('Error:', data.error);
+                alert('Error: ' + data.error);
+                return;
+            }
+            document.querySelector('.mt-8').style.display = 'block';
+
+            // Clear any previous images
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.innerHTML = '';
+
+            // Add new images to the page
+            data.images.forEach((imgStr, idx) => {
+                const imgElement = document.createElement('img');
+                imgElement.src = `data:image/png;base64,${imgStr}`;
+                imgElement.alt = `Image ${idx + 1}`;
+                imgElement.style.margin = '10px';
+                imgElement.style.maxWidth = '200px'; // Adjust the size as needed
+                imgElement.style.maxHeight = '200px'; // Adjust the size as needed
+                imageContainer.appendChild(imgElement);
             });
+            document.getElementById('loading').style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     });
 </script>
 </body>
