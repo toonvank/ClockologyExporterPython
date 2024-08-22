@@ -34,7 +34,6 @@ def clockface():
         remove('file.plist')
 
         with open('data.txt', 'wb') as f:
-            object = full_plist["$objects"][30]
             f.write(full_plist["$objects"][4])
 
         try:
