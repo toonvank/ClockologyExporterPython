@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clockology/Watchology Clock Face Viewer</title>
+    <title>Clockology Watchface Image Viewer</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen bg-background">
 <div class="max-w-3xl w-full px-4 md:px-6">
     <div class="overflow-hidden bg-white shadow rounded-lg">
         <div class="p-4 border-b border-gray-200">
-            <h2 class="text-xl font-bold">Clockology/Watchology Clock Face Viewer</h2>
+            <h2 class="text-xl font-bold">Clockology Watchface Image Viewer</h2>
             <p class="text-sm text-gray-500">
-                Upload or provide the URL of a Clockology clock or Watchology clock face file to view its contents.
+                Upload or provide the URL of a Clockology watch2 file to view its contents.
             </p>
+            <h3>Supported file types</h3>
+            <ul class="list-disc list-inside text-sm text-gray-500">
+                <li>.watch2</li>
+            </ul>
         </div>
         <div class="p-4">
             <div class="grid gap-4">
@@ -22,12 +26,8 @@
                         <label for="file" class="block text-sm font-medium text-gray-700">Upload File</label>
                         <input id="file" type="file" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
                     </div>
-                    <div>
-                        <label for="url" class="block text-sm font-medium text-gray-700">Provide URL</label>
-                        <input id="url" type="text" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm" placeholder="Enter clock face file URL">
-                    </div>
                 </div>
-                <button id="viewButton" class="bg-blue-500 text-white py-2 px-4 rounded-md">View Clock Face</button>
+                <button id="viewButton" class="bg-blue-500 text-white py-2 px-4 rounded-md">View Clock Face Contents</button>
             </div>
         </div>
     </div>
