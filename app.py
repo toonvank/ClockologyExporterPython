@@ -6,8 +6,12 @@ from flask import Flask, request, jsonify, render_template
 from biplist import readPlist, writePlist, InvalidPlistException
 import base64
 import json
+import io
 
 import re
+
+from importlib_metadata import files
+from typing_extensions import dataclass_transform
 
 app = Flask(__name__)
 
@@ -32,11 +36,16 @@ def clockface():
         with open('data.txt', 'wb') as f:
             f.write(full_plist["$objects"][4])
 
-        with open('data.txt', 'rb') as f:
-            data = f.read()
+        try:
+            with open('data.txt', 'rb') as f:
+                data = f.read()
+                data = data.decode('utf-8')
+                images = extract_images_from_base64(data)
+        except Exception as e:
+            data = full_plist["$objects"][5]
             data = data.decode('utf-8')
+            images = extract_images_from_base64(data)
 
-        images = extract_images_from_base64(data)
         image_strings = []
         for img in images:
             buffered = BytesIO()
@@ -44,10 +53,11 @@ def clockface():
             img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
             image_strings.append(img_str)
 
-        return jsonify({'images': image_strings})
+        remove('data.txt')
 
-    except InvalidPlistException as e:
-        return jsonify({'error': 'Invalid plist file'}), 400
+        return jsonify({'images': image_strings})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 
 
@@ -62,9 +72,15 @@ def extract_images_from_base64(base64_data):
     for match in matches:
         # Decode the base64 data
         img_data = base64.b64decode(match)
-        # Load image from bytes
-        img = Image.open(BytesIO(img_data))
-        images.append(img)
+        try:
+            # Load image from bytes
+            img = Image.open(BytesIO(img_data))
+            images.append(img)
+        except Exception as e:
+            continue
+
+
+
 
     return images
 

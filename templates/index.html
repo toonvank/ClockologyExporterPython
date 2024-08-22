@@ -99,6 +99,7 @@
         .then(response => response.json())  // Parse the JSON response
         .then(data => {
             if (data.error) {
+                document.getElementById('loading').style.display = 'none';
                 console.error('Error:', data.error);
                 alert('Error: ' + data.error);
                 return;
@@ -122,6 +123,8 @@
             document.getElementById('loading').style.display = 'none';
         })
         .catch(error => {
+            //remove loading spinner
+            document.getElementById('loading').style.display = 'none';
             console.error('Error:', error);
         });
     });
