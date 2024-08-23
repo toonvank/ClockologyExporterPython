@@ -6,49 +6,51 @@
     <title>Clockology Watchface Image Viewer</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen bg-background">
+<body class="flex flex-col items-center justify-center min-h-screen"
+    style="background-image: url('http://84.195.205.124/images/bg.png'); background-size: cover; background-position: center;background-repeat: no-repeat">
 <div class="max-w-3xl w-full px-4 md:px-6">
     <div class="overflow-hidden bg-white shadow rounded-lg">
         <div class="p-4 border-b border-gray-200">
-            <h2 class="text-xl font-bold">Clockology Watchface Image Viewer</h2>
+            <h2 class="text-xl font-bold">🕰️ Clockology Watchface Image Viewer</h2>
             <p class="text-sm text-gray-500">
-                Upload or provide the URL of a Clockology watch2 file to view its contents.
+                Upload or provide the URL of a Clockology watch2 file to view its contents. <br>Clockology files are stored in an encrypted format, so this tool will extract the images from the file for you and allow you to download them. This tool is not affiliated with Clockology or Apple.
             </p>
-            <h3>Supported file types</h3>
+            <label for="file" class="block text-m font-medium text-gray-700">Supported file types:</label>
             <ul class="list-disc list-inside text-sm text-gray-500">
                 <li>.watch2</li>
             </ul>
         </div>
         <div class="p-4">
             <div class="grid gap-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1">
                     <div>
-                        <label for="file" class="block text-sm font-medium text-gray-700">Upload File</label>
-                        <input id="file" type="file" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm">
+
+                        <input id="file" type="file" class="mt-2 block w-full border border-gray-300 rounded-md shadow-sm">
                     </div>
+
                 </div>
-                <button id="viewButton" class="bg-blue-500 text-white py-2 px-4 rounded-md">View Clock Face Contents</button>
+                <button id="viewButton" class="bg-blue-500 text-white py-2 px-4 rounded-md">View Clock Face Contents 📦</button>
+                <div class="text-center" style="display: none" id="error">
+                    <p class="text-lg text-red-500" id="errorMessage"></p>
+                </div>
             </div>
         </div>
     </div>
 
-
     <div class="text-center mt-4" style="display: none" id="loading">
-        <img src="https://global.discourse-cdn.com/sitepoint/original/3X/e/3/e352b26bbfa8b233050087d6cb32667da3ff809c.gif"
+        <img src="{{ url_for('static', filename='images/loading.gif') }}"
          style="display: block; margin-left: auto; margin-right: auto; width: 40%; margin-top: 10px">
         <p class="text-lg text-gray-500">Loading...</p>
     </div>
 
-    <div class="mt-8" style="display: none">
+    <div class="mt-8 mb-4" style="display: none">
         <div class="bg-white shadow rounded-lg">
-            <div class="p-4 border-b border-gray-200">
-                <h3 class="text-xl font-bold">Clock Face Preview</h3>
-            </div>
             <div class="p-4">
                 <div class="grid gap-4">
                     <div id="imageContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     </div>
-                    <div>
+                    <button id="downloadZip" class="bg-blue-500 text-white py-2 px-4 rounded-md">Download All Images 📦</button>
+                    <div style="display: none">
                         <h3 class="text-lg font-semibold">Clock Face Details</h3>
                         <div class="grid gap-2 text-sm text-gray-500">
                             <div class="flex justify-between">
@@ -73,61 +75,13 @@
             </div>
         </div>
     </div>
+    <div class="text-center mt-4 mb-4">
+        <p class="text-lg text-gray-500">2024 - Created by <a href="https://github.com/toonvank" class="text-blue-500">Toon Van Kimmenade</a></p>
+        <p class="text-g text-gray-500 italic">Not affiliated with Clockology or Apple.</p>
+    </div>
 </div>
-<script>
-    document.getElementById('viewButton').addEventListener('click', function() {
-        const fileInput = document.getElementById('file');
-        const urlInput = document.getElementById('url');
-
-        const formData = new FormData();
-
-        if (fileInput.files.length > 0) {
-            formData.append('file', fileInput.files[0]);
-        } else if (urlInput.value) {
-            formData.append('url', urlInput.value);
-        } else {
-            alert('Please provide a file or URL.');
-            return;
-        }
-
-        document.querySelector('.mt-8').style.display = 'none';
-        document.getElementById('loading').style.display = 'block';
-        fetch('/api/clockface', {
-        method: 'POST',
-        body: formData
-        })
-        .then(response => response.json())  // Parse the JSON response
-        .then(data => {
-            if (data.error) {
-                document.getElementById('loading').style.display = 'none';
-                console.error('Error:', data.error);
-                alert('Error: ' + data.error);
-                return;
-            }
-            document.querySelector('.mt-8').style.display = 'block';
-
-            // Clear any previous images
-            const imageContainer = document.getElementById('imageContainer');
-            imageContainer.innerHTML = '';
-
-            // Add new images to the page
-            data.images.forEach((imgStr, idx) => {
-                const imgElement = document.createElement('img');
-                imgElement.src = `data:image/png;base64,${imgStr}`;
-                imgElement.alt = `Image ${idx + 1}`;
-                imgElement.style.margin = '10px';
-                imgElement.style.maxWidth = '200px'; // Adjust the size as needed
-                imgElement.style.maxHeight = '200px'; // Adjust the size as needed
-                imageContainer.appendChild(imgElement);
-            });
-            document.getElementById('loading').style.display = 'none';
-        })
-        .catch(error => {
-            //remove loading spinner
-            document.getElementById('loading').style.display = 'none';
-            console.error('Error:', error);
-        });
-    });
-</script>
 </body>
 </html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" integrity="sha512-Qlv6VSKh1gDKGoJbnyA5RMXYcvnpIqhO++MhIM2fStMcGT9i2T//tSwYFlcyoRRDcDZ+TYHpH8azBBCyhpSeqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
