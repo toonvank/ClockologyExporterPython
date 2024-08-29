@@ -1,6 +1,12 @@
 let errorMessage = document.getElementById('errorMessage');
 let error = document.getElementById('error');
 
+document.getElementById('file').addEventListener('change', function() {
+    document.querySelector('.mt-8').style.display = 'none';
+    document.getElementById('viewButton').innerText = `View Clock Face Contents 📦`;
+    error.style.display = 'none';
+} );
+
 document.getElementById('viewButton').addEventListener('click', function() {
     error.style.display = 'none';
     document.querySelector('.mt-8').style.display = 'none';
@@ -55,6 +61,19 @@ document.getElementById('viewButton').addEventListener('click', function() {
             fileElement.style.maxWidth = '200px';
             fileElement.style.textAlign = 'center';
 
+            let extension;
+            switch (file.file_type) {
+                case 'application/font-sfnt':
+                    extension = 'ttf';
+                    break;
+                case 'video/quicktime':
+                    extension = 'mov';
+                    break;
+                default:
+                    extension = file.file_type.split('/').pop();
+                    break;
+            }
+
             if (file.file_type.startsWith('image/')) {
                 // Display the image
                 const imgElement = document.createElement('img');
@@ -86,22 +105,9 @@ document.getElementById('viewButton').addEventListener('click', function() {
 
                 fileElement.appendChild(imgElement);
             } else {
-                // Determine the file extension based on MIME type
-                let extension;
-                switch (file.file_type) {
-                    case 'application/font-sfnt':
-                        extension = 'ttf';
-                        break;
-                    case 'video/quicktime':
-                        extension = 'mov';
-                        break;
-                    default:
-                        extension = file.file_type.split('/').pop();
-                        break;
-                }
-
                 // Display the file type and a download link
                 const fileTypeElement = document.createElement('p');
+                fileTypeElement.innerText = `File Type: ${file.file_type}`;
 
                 const downloadLink = document.createElement('a');
                 downloadLink.href = `data:${file.file_type};base64,${file.content}`;
@@ -112,6 +118,33 @@ document.getElementById('viewButton').addEventListener('click', function() {
 
                 fileElement.appendChild(fileTypeElement);
                 fileElement.appendChild(downloadLink);
+
+                fileElement.addEventListener('click', function() {
+                    downloadLink.click();
+                });
+
+                fileElement.addEventListener('mouseover', function() {
+                    fileElement.style.cursor = 'pointer';
+                });
+
+                fileElement.addEventListener('mouseenter', function() {
+                    fileElement.style.border = '2px solid black';
+                    fileElement.style.maxWidth = '300px';
+                });
+
+                fileElement.addEventListener('mouseleave', function() {
+                    fileElement.style.border = 'none';
+                    fileElement.style.maxWidth = '200px';
+                });
+
+                // Show a file icon for non-image files
+                const iconElement = document.createElement('img');
+                iconElement.src = '/static/images/file.png';  // Assuming a generic file icon is available
+                iconElement.alt = `File ${idx + 1}`;
+                iconElement.style.maxWidth = '100px';
+                iconElement.style.maxHeight = '100px';
+                iconElement.style.margin = 'auto';
+                fileElement.appendChild(iconElement);
             }
 
             contentContainer.appendChild(fileElement);
@@ -134,22 +167,25 @@ document.getElementById('downloadZip').addEventListener('click', function() {
         const item = items[i];
         const imgElement = item.querySelector('img');
         const linkElement = item.querySelector('a');
-        const fileType = item.querySelector('p').innerText.split(': ')[1];
+        const fileTypeElement = item.querySelector('p');
 
         let extension;
-        switch (fileType) {
-            case 'application/font-sfnt':
-                extension = 'ttf';
-                break;
-            case 'video/quicktime':
-                extension = 'mov';
-                break;
-            default:
-                extension = fileType.split('/').pop();
-                break;
+        if (fileTypeElement) {
+            const fileType = fileTypeElement.innerText.split(': ')[1];
+            switch (fileType) {
+                case 'application/font-sfnt':
+                    extension = 'ttf';
+                    break;
+                case 'video/quicktime':
+                    extension = 'mov';
+                    break;
+                default:
+                    extension = fileType.split('/').pop();
+                    break;
+            }
         }
 
-        if (imgElement) {
+        if (imgElement && imgElement.src.startsWith('data:image/')) {
             const imgData = imgElement.src.split(',')[1];
             zip.file(`image-${i + 1}.png`, imgData, { base64: true });
         } else if (linkElement) {

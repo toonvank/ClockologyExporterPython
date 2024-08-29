@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clockology Watchface Image Viewer</title>
+    <title>Clockology Watchface File Viewer</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Clockology Watchface Image Viewer - Upload or provide the URL of a Clockology watch2 file to view its contents. Extract and download images from the file.">
-    <meta name="keywords" content="Clockology, watchface, image viewer, Clockology watch2, Clockology files, watchface image extractor, Clockology tool">
+    <meta name="description" content="Clockology Watchface File Viewer - Upload or provide the URL of a Clockology watch2 file to view its contents. Extract and download images from the file.">
+    <meta name="keywords" content="Clockology, watchface, filee viewer, Clockology watch2, Clockology files, watchface image extractor, Clockology tool">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Toon Van Kimmenade">
     <meta name="language" content="English">
@@ -17,15 +17,15 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://clockexporter.toonvank.online">
-    <meta property="og:title" content="Clockology Watchface Image Viewer">
-    <meta property="og:description" content="Upload or provide the URL of a Clockology watch2 file to view its contents. Extract and download images from the file.">
+    <meta property="og:title" content="Clockology Watchface File Viewer">
+    <meta property="og:description" content="Upload or provide the URL of a Clockology watch2 file to view its contents. Extract and download images, videos and fonts from the file.">
     <meta property="og:image" content="https://i.ibb.co/qy5qdDc/bg.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://clockexporter.toonvank.online">
-    <meta property="twitter:title" content="Clockology Watchface Image Viewer">
-    <meta property="twitter:description" content="Upload or provide the URL of a Clockology watch2 file to view its contents. Extract and download images from the file.">
+    <meta property="twitter:title" content="Clockology Watchface File Viewer">
+    <meta property="twitter:description" content="Upload or provide the URL of a Clockology watch2 file to view its contents. Extract and download images, videos and fonts from the file.">
     <meta property="twitter:image" content="https://i.ibb.co/qy5qdDc/bg.png">
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen"
@@ -33,9 +33,9 @@
 <div class="max-w-3xl w-full px-4 md:px-6">
     <div class="overflow-hidden bg-white shadow rounded-lg">
         <div class="p-4 border-b border-gray-200">
-            <h2 class="text-xl font-bold">🕰️ Clockology Watchface Image Viewer</h2>
+            <h2 class="text-xl font-bold">🕰️ Clockology Watchface File Viewer</h2>
             <p class="text-sm text-gray-500">
-                Upload or provide the URL of a Clockology watch2 file to view its contents. <br>Clockology files are stored in an encrypted format, so this tool will extract the images from the file for you and allow you to download them. This tool is not affiliated with Clockology or Apple.
+                Upload or provide the URL of a Clockology watch2 file to view its contents. <br>Clockology files are stored in an encrypted format, so this tool will extract all available images, fonts and videos from the file for you and allow you to download them. This tool is not affiliated with Clockology or Apple.
             </p>
             <label for="file" class="block text-m font-medium text-gray-700">Supported file types:</label>
             <ul class="list-disc list-inside text-sm text-gray-500">
@@ -71,7 +71,7 @@
                 <div class="grid gap-4">
                     <div id="imageContainer" class="grid grid-cols-2 md:grid-cols-3 gap-4">
                     </div>
-                    <button id="downloadZip" class="bg-blue-500 text-white py-2 px-4 rounded-md">Download All Images 📦</button>
+                    <button id="downloadZip" class="bg-blue-500 text-white py-2 px-4 rounded-md">Download All Files 📦</button>
                     <div style="display: none">
                         <h3 class="text-lg font-semibold">Clock Face Details</h3>
                         <div class="grid gap-2 text-sm text-gray-500">
