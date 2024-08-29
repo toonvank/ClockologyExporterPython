@@ -9,15 +9,18 @@ import json
 import io
 
 import re
+import filetype
 
 from importlib_metadata import files
 from typing_extensions import dataclass_transform
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/api/clockface', methods=['POST'])
 def clockface():
@@ -40,25 +43,17 @@ def clockface():
             with open('data.txt', 'rb') as f:
                 data = f.read()
                 data = data.decode('utf-8')
-                images = extract_images_from_base64(data)
+                files = extract_images_from_base64(data)
         except Exception as e:
             data = full_plist["$objects"][5]
             data = data.decode('utf-8')
-            images = extract_images_from_base64(data)
-
-        image_strings = []
-        for img in images:
-            buffered = BytesIO()
-            img.save(buffered, format="PNG")
-            img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
-            image_strings.append(img_str)
+            files = extract_images_from_base64(data)
 
         remove('data.txt')
 
-        return jsonify({'images': image_strings})
+        return jsonify({'files': files})
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-
 
 
 def extract_images_from_base64(base64_data):
@@ -68,18 +63,43 @@ def extract_images_from_base64(base64_data):
     # Find all matches of the pattern in the base64 data
     matches = image_pattern.findall(base64_data)
 
-    images = []
+    files = []
     for match in matches:
         # Decode the base64 data
-        img_data = base64.b64decode(match)
+        file_data = base64.b64decode(match)
         try:
-            # Load image from bytes
-            img = Image.open(BytesIO(img_data))
-            images.append(img)
-        except Exception as e:
-            continue
+            # Determine the file type using filetype library
+            kind = filetype.guess(file_data)
+            if kind:
+                file_type = kind.mime
+            else:
+                file_type = 'unknown/unknown'
 
-    return images
+            # Prepare the response object
+            file_info = {
+                'file_type': file_type,
+                'content': base64.b64encode(file_data).decode('utf-8')
+            }
+
+            # If the file is an image, convert it and include it in the response
+            if file_type.startswith('image/'):
+                img = Image.open(BytesIO(file_data))
+                buffered = BytesIO()
+                img.save(buffered, format="PNG")
+                img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
+                file_info['content'] = img_str
+
+            files.append(file_info)
+        except Exception as e:
+            # Handle the error and log the detected file type or error message
+            file_info = {
+                'file_type': 'error',
+                'content': str(e)
+            }
+            files.append(file_info)
+
+    return files
+
 
 if __name__ == '__main__':
     app.run(debug=True)
