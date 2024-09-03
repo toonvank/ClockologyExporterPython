@@ -53,8 +53,16 @@ def clockface():
 
         return jsonify({'files': files})
     except Exception as e:
-        return jsonify({'error': str(e)}), 400
-
+        try:
+            with open('data.txt', 'wb') as f:
+                f.write(full_plist["$objects"][3])
+            with open('data.txt', 'rb') as f:
+                data = f.read()
+                data = data.decode('utf-8')
+                files = extract_images_from_base64(data)
+            return jsonify({'files': files})
+        except Exception as e:
+            return jsonify({'error': str(e)}), 400
 
 def extract_images_from_base64(base64_data):
     # Define a pattern to match base64 image data
