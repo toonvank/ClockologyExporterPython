@@ -25,7 +25,7 @@ document.getElementById('viewButton').addEventListener('click', function() {
 
     // Check if file is in clock2 format
     const file = fileInput.files[0];
-    if (file.name.split('.').pop() !== 'clock2' && file.name.split('.').pop() !== 'clock') {
+    if (file.name.split('.').pop() !== 'clock2' && file.name.split('.').pop() !== 'clock' && file.name.split('.').pop() !== 'face') {
         error.style.display = 'block';
         errorMessage.innerText = 'Please select a clock2 file';
         return;
