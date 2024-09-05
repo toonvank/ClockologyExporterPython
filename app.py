@@ -71,14 +71,18 @@ def clockface():
 
                 # Loop through the objects starting right after 'assetData'
                 i = asset_data_index + 1
+                end = 0 # File counter
                 while i < len(full_plist["$objects"]):
                     try:
-                        # Skip if the current object is a dictionary (dict)
+                        if end > 12:
+                            break
                         if isinstance(full_plist["$objects"][i], dict):
                             i += 1
+                            end += 1
                             continue
                         if isinstance(full_plist["$objects"][i], str):
                             i += 1
+                            end += 1
                             continue
 
                         # Get the file data
