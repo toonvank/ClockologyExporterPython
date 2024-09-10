@@ -6,36 +6,32 @@
     <title>Clockology Watchface File Viewer</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
-
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Clockology Watchface File Viewer - Upload or provide the URL of a Clockology watch2 file to view its contents. Extract and download images from the file.">
-    <meta name="keywords" content="Clockology, watchface, filee viewer, Clockology watch2, Clockology files, watchface image extractor, Clockology tool">
+    <meta name="description" content="Clockology Watchface File Viewer - Upload or provide the URL of a Clockology clock and clock2 file to view its contents. Extract and download images from the file.">
+    <meta name="keywords" content="Clockology, watchface, filee viewer, Clockology clock and clock2, Clockology files, watchface image extractor, Clockology tool">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Toon Van Kimmenade">
     <meta name="language" content="English">
-
-    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://clockexporter.toonvank.online">
     <meta property="og:title" content="Clockology Watchface File Viewer">
-    <meta property="og:description" content="Upload or provide the URL of a Clockology watch2 file to view its contents. Extract and download images, videos and fonts from the file.">
-    <meta property="og:image" content="https://i.ibb.co/qy5qdDc/bg.png">
-
-    <!-- Twitter -->
+    <meta property="og:description" content="Upload or provide the URL of a Clockology clock2 file to view its contents. Extract and download images, videos and fonts from the file.">
+    <meta property="og:image" content="{{ url_for('static', filename='images/bg.png') }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://clockexporter.toonvank.online">
     <meta property="twitter:title" content="Clockology Watchface File Viewer">
-    <meta property="twitter:description" content="Upload or provide the URL of a Clockology watch2 file to view its contents. Extract and download images, videos and fonts from the file.">
-    <meta property="twitter:image" content="https://i.ibb.co/qy5qdDc/bg.png">
+    <meta property="twitter:description" content="Upload or provide the URL of a Clockology clock and clock2 file to view its contents. Extract and download images, videos and fonts from the file.">
+    <meta property="twitter:image" content="{{ url_for('static', filename='images/bg.png') }}">
 </head>
 <body class="flex flex-col items-center justify-center min-h-screen"
     style="background-image: url('/static/images/bg.png'); background-size: cover; background-position: center;background-repeat: no-repeat">
 <div class="max-w-3xl w-full px-4 md:px-6">
     <div class="overflow-hidden bg-white shadow rounded-lg">
-        <div class="p-4 border-b border-gray-200">
-            <h2 class="text-xl font-bold">🕰️ Clockology Watchface File Viewer</h2>
+        <div class="p-4 border-b border-gray-200">²
+            <h1 class="text-xl font-bold">🕰️ Clockology Watchface File Viewer</h1>
             <p class="text-sm text-gray-500">
-                Upload or provide the URL of a Clockology watch2 file to view its contents. <br>Clockology files are stored in an encrypted format, so this tool will extract all available images, fonts and videos from the file for you and allow you to download them.
+                Upload or provide the URL of a Clockology clock and clock2 file to view its contents. <br>Clockology files are stored in an encrypted format, so this tool will extract all available images, fonts and videos from the file for you and allow you to download them.
             </p>
             <label for="file" class="block text-m font-medium text-gray-700">Supported file types:</label>
             <ul class="list-disc list-inside text-sm text-gray-500">
