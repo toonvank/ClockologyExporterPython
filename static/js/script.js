@@ -5,6 +5,7 @@ document.getElementById('file').addEventListener('change', function() {
     document.querySelector('.mt-8').style.display = 'none';
     document.getElementById('viewButton').innerText = `View Clock Face Contents 📦`;
     error.style.display = 'none';
+    document.getElementById('viewButton').click();
 } );
 
 document.getElementById('viewButton').addEventListener('click', function() {
