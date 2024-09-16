@@ -2,22 +2,21 @@ let errorMessage = document.getElementById('errorMessage');
 let error = document.getElementById('error');
 
 document.getElementById('file').addEventListener('change', function() {
-    document.querySelector('.mt-8').style.display = 'none';
-    document.getElementById('viewButton').innerText = `View Clock Face Contents 📦`;
-    error.style.display = 'none';
-    document.getElementById('viewButton').click();
+    if (document.getElementById('file').files.length !== 0)
+        console.log(document.getElementById('file').files)
+        error.style.display = 'none';
+        startDecoding()
 } );
 
-document.getElementById('viewButton').addEventListener('click', function() {
+function startDecoding(){
     error.style.display = 'none';
-    document.querySelector('.mt-8').style.display = 'none';
-    document.getElementById('viewButton').innerText = `View Clock Face Contents 📦`;
 
     const fileInput = document.getElementById('file');
     const formData = new FormData();
 
     if (fileInput.files.length > 0) {
         formData.append('file', fileInput.files[0]);
+        document.querySelector('.mt-8').style.display = 'none';
     } else {
         error.style.display = 'block';
         errorMessage.innerText = 'Please select a file to upload';
@@ -31,8 +30,6 @@ document.getElementById('viewButton').addEventListener('click', function() {
         errorMessage.innerText = 'Please select a clock2 file';
         return;
     }
-
-    document.querySelector('.mt-8').style.display = 'none';
     document.getElementById('loading').style.display = 'block';
 
     fetch('/api/clockface', {
@@ -157,7 +154,7 @@ document.getElementById('viewButton').addEventListener('click', function() {
         document.getElementById('loading').style.display = 'none';
         console.error('Error:', error);
     });
-});
+}
 
 document.getElementById('downloadZip').addEventListener('click', function() {
     const zip = new JSZip();
