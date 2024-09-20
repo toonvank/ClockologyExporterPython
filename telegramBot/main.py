@@ -1,7 +1,7 @@
 import base64 as b64
 import os
 import shutil
-
+import threading
 import magic
 import requests
 from flask import Flask
@@ -92,14 +92,19 @@ def main():
     application.run_polling()
 
 
-if __name__ == '__main__':
-    main()
+def run_flask():
+    app = Flask(__name__)
 
-app = Flask(__name__)
+    @app.route('/status')
+    def status():
+        return "Bot is running!", 200
 
-@app.route('/status')
-def status():
-    return "Bot is running!", 200
-
-if __name__ == "__main__":
     app.run(host='0.0.0.0', port=2221)
+
+if __name__ == '__main__':
+    # Start the Flask app in a separate thread
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.start()
+
+    # Start the Telegram bot
+    main()
