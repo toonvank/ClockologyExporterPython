@@ -15,11 +15,13 @@ def index():
 
 @app.route('/api/clockface', methods=['POST'])
 def clockface():
+    file = request.data.decode('utf-8')
     if 'file' not in request.files:
         return jsonify({'error': 'No file provided'}), 400
     try:
         full_plist = readPlist(request.files['file'])
         plistObjects = full_plist["$objects"][4]
+        print(plistObjects)
         try:
             # Just a regular clock2 file
             files = extract_images_from_base64(plistObjects.decode('utf-8'))
