@@ -4,6 +4,7 @@ import shutil
 
 import magic
 import requests
+from flask import Flask
 from telegram.ext import Application, MessageHandler, filters, CommandHandler
 
 
@@ -25,8 +26,6 @@ async def start_decode(update, context):
 
     mime = magic.Magic(mime=True)
     file_type = mime.from_file(file_name)
-
-    print(f"File type: {file_type}")
 
     if file_type != "application/x-apple-binary-plist" and  file_type != "application/x-bplist":
         await update.message.reply_text(
@@ -95,3 +94,12 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+app = Flask(__name__)
+
+@app.route('/status')
+def status():
+    return "Bot is running!", 200
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=2221)
