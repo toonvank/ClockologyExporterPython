@@ -8,13 +8,12 @@ import requests
 from flask import Flask
 from telegram.ext import Application, MessageHandler, filters, CommandHandler
 
-shutdown_flag = False
+shutdown_event = threading.Event()  # Use an Event for shutdown signaling
 
 async def reply(update, context):
-    await update.message.reply_text("Hello there! Please send your clock files here and i will export them to a zip file.")
+    await update.message.reply_text("Hello there! Please send your clock files here and I will export them to a zip file.")
 
 async def start_decode(update, context):
-    global shutdown_flag
     try:
         file = await context.bot.get_file(update.message.document)
         url = "https://clockexporter.toonvank.online/api/clockface"
@@ -31,18 +30,20 @@ async def start_decode(update, context):
         mime = magic.Magic(mime=True)
         file_type = mime.from_file(file_name)
 
-        if file_type != "application/x-apple-binary-plist" and  file_type != "application/x-bplist":
+        if file_type != "application/x-apple-binary-plist" and file_type != "application/x-bplist":
             await update.message.reply_text(
                 "Error: Invalid file content. Only 'Apple binary property list' files are accepted.")
             os.remove(file_name)
             return
 
-        await update.message.reply_text("Recieved file. Processing now. Please wait...")
+        await update.message.reply_text("Received file. Processing now. Please wait...")
 
         files = {'file': open(file_name, 'rb')}
-        await update.message.reply_text("Shutting down")
+        # You can remove this line; it's only for testing.
+        # await update.message.reply_text("Shutting down")
 
-        raise Exception("Sorry, no numbers below zero")
+        # Simulating an error for testing
+        # raise Exception("Sorry, no numbers below zero")
 
         r = requests.post(url, files=files)
         response = r.json()["files"]
@@ -64,31 +65,27 @@ async def start_decode(update, context):
 
         with open("output.zip", "rb") as f:
             await context.bot.send_document(chat_id=update.message.chat_id, document=f)
-        f.close()
 
         os.remove("output.zip")
         shutil.rmtree("output")
         os.makedirs("output")
         os.remove(file_name)
-    except Exception as e:
-        shutdown_flag = True
-        sys.exit(1)
 
+    except Exception as e:
+        print(f"Error: {e}")
+        shutdown_event.set()  # Signal shutdown
 
 def get_file_extension(file_type_element):
     if file_type_element:
         if file_type_element == 'application/font-sfnt':
-            extension = 'ttf'
-        if file_type_element == 'image/png':
-            extension = 'png'
+            return 'ttf'
+        elif file_type_element == 'image/png':
+            return 'png'
         elif file_type_element == 'video/quicktime':
-            extension = 'mov'
+            return 'mov'
         else:
-            extension = file_type_element.split('/').pop()
-        return extension
-    else:
-        return 'png'  # Or handle the case where file_type_element is None
-
+            return file_type_element.split('/').pop()
+    return 'png'  # Or handle the case where file_type_element is None
 
 def main():
     token = "7694848459:AAFA9GFgJ2qHrAYfTA-ImA9aRksHsFIX_O8"
@@ -103,9 +100,7 @@ def main():
         application.run_polling()
     except Exception as e:
         print(f"Bot crashed: {e}")
-        shutdown_flag = True  # Set the shutdown flag
-        sys.exit(1)
-
+        shutdown_event.set()  # Signal shutdown
 
 def run_flask():
     app = Flask(__name__)
@@ -114,8 +109,8 @@ def run_flask():
     def status():
         return "Bot is running!", 200
 
-    while not shutdown_flag:
-        app.run(host='0.0.0.0', port=2221)
+    while not shutdown_event.is_set():
+        app.run(host='0.0.0.0', port=2221, use_reloader=False)  # Disable reloader
 
 if __name__ == '__main__':
     # Start the Flask app in a separate thread
