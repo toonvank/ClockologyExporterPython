@@ -3,17 +3,38 @@ from django.utils.baseconv import base64
 from telegram.ext import Application, MessageHandler, filters, CommandHandler
 import base64 as b64
 import shutil
+import os
+import magic
 
 
 async def reply(update, context):
-    await update.message.reply_text("Hello there!")
+    await update.message.reply_text("Hello there! Please send your clock files here and i will export them to a zip file.")
 
 async def start_decode(update, context):
     file = await context.bot.get_file(update.message.document)
     url = "https://clockexporter.toonvank.online/api/clockface"
-    await file.download_to_drive('test.clock2')
+    file_name = update.message.document.file_name
 
-    files = {'file': open('test.clock2', 'rb')}
+    allowed_extensions = ['clock2', 'clock', 'face']
+    if not any(file_name.endswith(ext) for ext in allowed_extensions):
+        await update.message.reply_text(
+            "Error: Invalid file type. Only '.clock2', '.clock', or '.face' files are accepted. Please try again.")
+        return
+
+    await file.download_to_drive(file_name)
+
+    mime = magic.Magic(mime=True)
+    file_type = mime.from_file(file_name)
+
+    if file_type != "application/x-apple-binary-plist":
+        await update.message.reply_text(
+            "Error: Invalid file content. Only 'Apple binary property list' files are accepted.")
+        os.remove(file_name)
+        return
+
+    await update.message.reply_text("Recieved file. Processing now. Please wait...")
+
+    files = {'file': open(file_name, 'rb')}
 
     r = requests.post(url, files=files)
     response = r.json()["files"]
@@ -33,12 +54,14 @@ async def start_decode(update, context):
 
     shutil.make_archive("output.zip".replace('.zip', ''), 'zip', "output")
 
-    # Send the zip file back to the user
     with open("output.zip", "rb") as f:
         await context.bot.send_document(chat_id=update.message.chat_id, document=f)
+    f.close()
 
-    # Confirmation message
-    await update.message.reply_text("Success.")
+    os.remove("output.zip")
+    shutil.rmtree("output")
+    os.makedirs("output")
+    os.remove(file_name)
 
 
 def get_file_extension(file_type_element):

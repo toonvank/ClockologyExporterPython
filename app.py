@@ -15,7 +15,6 @@ def index():
 
 @app.route('/api/clockface', methods=['POST'])
 def clockface():
-    file = request.data.decode('utf-8')
     if 'file' not in request.files:
         return jsonify({'error': 'No file provided'}), 400
     try:
