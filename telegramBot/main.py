@@ -28,7 +28,7 @@ async def start_decode(update, context):
 
     print(f"File type: {file_type}")
 
-    if file_type != "application/x-apple-binary-plist":
+    if file_type != "application/x-apple-binary-plist" and  file_type != "application/x-bplist":
         await update.message.reply_text(
             "Error: Invalid file content. Only 'Apple binary property list' files are accepted.")
         os.remove(file_name)
