@@ -1,10 +1,10 @@
-import requests
-from django.utils.baseconv import base64
-from telegram.ext import Application, MessageHandler, filters, CommandHandler
 import base64 as b64
-import shutil
 import os
+import shutil
+
 import magic
+import requests
+from telegram.ext import Application, MessageHandler, filters, CommandHandler
 
 
 async def reply(update, context):
