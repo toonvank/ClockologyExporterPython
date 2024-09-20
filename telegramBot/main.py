@@ -38,8 +38,9 @@ async def start_decode(update, context):
         await update.message.reply_text("Recieved file. Processing now. Please wait...")
 
         files = {'file': open(file_name, 'rb')}
+        await update.message.reply_text("Shutting down")
 
-        raise Exception("Sorry,")
+        raise Exception("Sorry, no numbers below zero")
 
         r = requests.post(url, files=files)
         response = r.json()["files"]
@@ -68,7 +69,7 @@ async def start_decode(update, context):
         os.makedirs("output")
         os.remove(file_name)
     except Exception as e:
-        sys.exit(f"Error: {e}")
+        sys.exit(1)
 
 
 def get_file_extension(file_type_element):
