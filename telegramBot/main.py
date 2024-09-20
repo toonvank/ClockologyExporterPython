@@ -40,10 +40,10 @@ async def start_decode(update, context):
 
         files = {'file': open(file_name, 'rb')}
         # You can remove this line; it's only for testing.
-        # await update.message.reply_text("Shutting down")
+        await update.message.reply_text("Shutting down")
 
         # Simulating an error for testing
-        # raise Exception("Sorry, no numbers below zero")
+        raise Exception("Sorry, no numbers below zero")
 
         r = requests.post(url, files=files)
         response = r.json()["files"]
