@@ -8,11 +8,13 @@ import requests
 from flask import Flask
 from telegram.ext import Application, MessageHandler, filters, CommandHandler
 
+shutdown_flag = False
 
 async def reply(update, context):
     await update.message.reply_text("Hello there! Please send your clock files here and i will export them to a zip file.")
 
 async def start_decode(update, context):
+    global shutdown_flag
     try:
         file = await context.bot.get_file(update.message.document)
         url = "https://clockexporter.toonvank.online/api/clockface"
@@ -69,6 +71,7 @@ async def start_decode(update, context):
         os.makedirs("output")
         os.remove(file_name)
     except Exception as e:
+        shutdown_flag = True
         sys.exit(1)
 
 
@@ -95,8 +98,13 @@ def main():
     application.add_handler(CommandHandler("hello", reply))
     application.add_handler(MessageHandler(filters.ATTACHMENT, start_decode))
 
-    print("Telegram Bot started!", flush=True)
-    application.run_polling()
+    try:
+        print("Telegram Bot started!", flush=True)
+        application.run_polling()
+    except Exception as e:
+        print(f"Bot crashed: {e}")
+        shutdown_flag = True  # Set the shutdown flag
+        sys.exit(1)
 
 
 def run_flask():
@@ -106,7 +114,8 @@ def run_flask():
     def status():
         return "Bot is running!", 200
 
-    app.run(host='0.0.0.0', port=2221)
+    while not shutdown_flag:
+        app.run(host='0.0.0.0', port=2221)
 
 if __name__ == '__main__':
     # Start the Flask app in a separate thread
