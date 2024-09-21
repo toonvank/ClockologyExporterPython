@@ -6,6 +6,7 @@ import filetype
 from PIL import Image
 from biplist import readPlist
 from flask import Flask, request, jsonify, render_template
+import logging
 
 app = Flask(__name__)
 
@@ -18,6 +19,9 @@ def clockface():
     if 'file' not in request.files:
         return jsonify({'error': 'No file provided'}), 400
     try:
+        logging.basicConfig(filename='history.log', encoding='utf-8', level=logging.DEBUG)
+        logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+        logging.info('a request was made')
         full_plist = readPlist(request.files['file'])
         plistObjects = full_plist["$objects"][4]
         print(plistObjects)
