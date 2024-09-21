@@ -61,8 +61,8 @@ async def start_decode(update, context):
         await context.bot.send_document(chat_id=update.message.chat_id, document=f)
     f.close()
 
-    os.remove("output.zip")
-    shutil.rmtree("output")
+    os.remove(file_name + ".zip")
+    shutil.rmtree(file_name)
     os.makedirs("output")
     os.remove(file_name)
 
