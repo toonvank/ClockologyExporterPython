@@ -24,7 +24,6 @@ async def start_decode(update, context):
 
     await file.download_to_drive(file_name)
 
-    ''' 
     mime = magic.Magic(mime=True)
     file_type = mime.from_file(file_name)
 
@@ -33,8 +32,6 @@ async def start_decode(update, context):
             "Error: Invalid file content. Only 'Apple binary property list' files are accepted.")
         os.remove(file_name)
         return
-        
-    '''
 
     await update.message.reply_text("Recieved file. Processing now. Please wait...")
 
