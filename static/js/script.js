@@ -5,7 +5,6 @@ let fileName
 document.getElementById('file').addEventListener('change', function() {
     if (document.getElementById('file').files.length !== 0)
         fileName = document.getElementById('file').files[0].name.split('.').slice(0, -1).join('.')
-        console.log(document.getElementById('file').files)
         error.style.display = 'none';
         startDecoding()
 } );

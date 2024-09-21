@@ -19,12 +19,10 @@ def clockface():
     if 'file' not in request.files:
         return jsonify({'error': 'No file provided'}), 400
     try:
-        logging.basicConfig(filename='history.log', encoding='utf-8', level=logging.DEBUG)
-        logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+        logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',filename='history.log', encoding='utf-8', level=logging.DEBUG)
         logging.info('a request was made')
         full_plist = readPlist(request.files['file'])
         plistObjects = full_plist["$objects"][4]
-        print(plistObjects)
         try:
             # Just a regular clock2 file
             files = extract_images_from_base64(plistObjects.decode('utf-8'))
