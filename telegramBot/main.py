@@ -24,6 +24,7 @@ async def start_decode(update, context):
 
     await file.download_to_drive(file_name)
 
+    ''' 
     mime = magic.Magic(mime=True)
     file_type = mime.from_file(file_name)
 
@@ -32,6 +33,8 @@ async def start_decode(update, context):
             "Error: Invalid file content. Only 'Apple binary property list' files are accepted.")
         os.remove(file_name)
         return
+        
+    '''
 
     await update.message.reply_text("Recieved file. Processing now. Please wait...")
 
@@ -53,13 +56,13 @@ async def start_decode(update, context):
             f.write(img_data)
         g += 1
 
-    shutil.make_archive("output.zip".replace('.zip', ''), 'zip', "output")
+    shutil.make_archive(file_name+".zip".replace('.zip', ''), 'zip', "output")
 
-    with open("output.zip", "rb") as f:
+    with open(file_name+".zip", "rb") as f:
         await context.bot.send_document(chat_id=update.message.chat_id, document=f)
     f.close()
 
-    os.remove("output.zip")
+    os.remove(file_name+".zip")
     shutil.rmtree("output")
     os.makedirs("output")
     os.remove(file_name)
