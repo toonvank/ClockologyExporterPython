@@ -53,6 +53,8 @@ async def start_decode(update, context):
             f.write(img_data)
         g += 1
 
+    file_name = file_name.rsplit('.', 1)
+
     os.rename("output",file_name)
 
     shutil.make_archive(file_name + ".zip".replace('.zip', ''), 'zip', file_name)
