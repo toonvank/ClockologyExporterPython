@@ -53,18 +53,14 @@ async def start_decode(update, context):
             f.write(img_data)
         g += 1
 
-    file_name = file_name.rsplit('.', 1)
+    shutil.make_archive("output.zip".replace('.zip', ''), 'zip', "output")
 
-    os.rename("output",file_name)
-
-    shutil.make_archive(file_name + ".zip".replace('.zip', ''), 'zip', file_name)
-
-    with open(file_name + ".zip", "rb") as f:
+    with open("output.zip", "rb") as f:
         await context.bot.send_document(chat_id=update.message.chat_id, document=f)
     f.close()
 
-    os.remove(file_name + ".zip")
-    shutil.rmtree(file_name)
+    os.remove("output.zip")
+    shutil.rmtree("output")
     os.makedirs("output")
     os.remove(file_name)
 
