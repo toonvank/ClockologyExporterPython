@@ -19,7 +19,7 @@ def clockface():
     if 'file' not in request.files:
         return jsonify({'error': 'No file provided'}), 400
     try:
-        logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',filename='history.log', encoding='utf-8', level=logging.DEBUG)
+        logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p',filename='history.log', encoding='utf-8', level=logging.INFO)
         logging.info('a request was made')
         full_plist = readPlist(request.files['file'])
         plistObjects = full_plist["$objects"][4]
