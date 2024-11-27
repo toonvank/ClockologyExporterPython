@@ -1,0 +1,6 @@
+Flask==3.0.0
+gunicorn==21.0.0
+Pillow==9.4.0
+biplist==1.0.3
+filetype==1.2.0
+

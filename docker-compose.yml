@@ -1,0 +1,16 @@
+version: '3'
+services:
+  bot_flask_app:
+    build: .
+    container_name: ClockologyExporterPython
+    ports:
+      - "9200:9200"
+      - "2221:2221"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=app.py
+    restart: always
+    command: >
+      bash -c "gunicorn -w 4 -b 0.0.0.0:9200 app:app & python3 /app/telegramBot/main.py"
+

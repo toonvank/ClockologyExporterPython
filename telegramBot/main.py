@@ -64,7 +64,6 @@ async def start_decode(update, context):
     os.makedirs("output")
     os.remove(file_name)
 
-
 def get_file_extension(file_type_element):
     if file_type_element:
         if file_type_element == 'application/font-sfnt':
