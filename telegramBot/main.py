@@ -29,12 +29,6 @@ async def start_decode(update, context):
     mime = magic.Magic(mime=True)
     file_type = mime.from_file(file_name)
 
-    if file_type != "application/x-apple-binary-plist" and  file_type != "application/x-bplist":
-        await update.message.reply_text(
-            "Error: Invalid file content. Only 'Apple binary property list' files are accepted.")
-        os.remove(file_name)
-        return
-
     await update.message.reply_text("Received file. Processing now. Please wait...")  # Fixed typo
 
     try:
